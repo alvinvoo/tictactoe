@@ -4,6 +4,7 @@
 #tic-tac-toe #game li.disable{color:#fff}
 #tic-tac-toe #game {float:left; padding:0; clear:both}
 .new_span {width:226px}
+.span3 {width:220px; text-align: center;}
 #tic-tac-toe #reset { padding:5px 10px; color:#fff; font-family:Arial, Helvetica, sans-serif; font-size:20px; clear:both; cursor:pointer; float:left; text-align:center; text-transform:uppercase; outline:none; width:204px}
 .input-prepend span.pre_text {width:55px}
 .input-prepend .span1{width:93px}
