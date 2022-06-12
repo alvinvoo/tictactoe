@@ -84,7 +84,6 @@ $(document).ready(function() {
     return true
   }
 
-  // tricky bug: if player has the winning move on last slot, it will be a TIE instead
   const checkWinOrTie = () => {
     for(player in players){
       if (winCond(player))
@@ -93,11 +92,12 @@ $(document).ready(function() {
         count = 0
         players[player]['score']++
         $(`#${player}_win`).text(players[player]['score'])
-      } else if (count == (boardLen * boardLen)){
-        alert('Its a tie. It will restart.')
-        reset()
-        count = 0
-      }
+      } 
+    }
+    if (count == (boardLen * boardLen)){
+      alert('Its a tie. It will restart.')
+      reset()
+      count = 0
     }
   }
 
