@@ -17,6 +17,6 @@ More Ideas
 - Possible to have more than 2 players
 
 With docker & docker-compose installed, simply run:  
-```docker-compose up -d```
-
+```docker-compose up -d```  
+and visit `localhost` in your browser  
 
