@@ -1,3 +1,5 @@
+Preview: http://45.32.99.107  
+  
 Improve Game Logic 
 - Small fix so that when 2 players reach a "tie", the popup appears immediately instead of next click 
 - Use a simple state machine to manage the 3 possible states in `clickAction`
