@@ -1,21 +1,21 @@
 // JavaScript Document
 $(document).ready(function() {
-  var x = "x"
-  var o = "o"
-  var t = "△"
-  var count = 0
-  const boardLen = 5
+  let count = 0
+  let boardLen = 3
   //let winningCombo = [[1,2,3], [4,5,6], [7,8,9], [1,4,7], [2,5,8], [3,6,9], [1,5,9], [3,5,7]]
   let winningCombo = []
-  let score = {
-    'x': 0,
-    'o': 0,
+  let players = {
+    'o': {score: 0, turn: 0, meta: 'disable o btn-primary'},
+    'x': {score: 0, turn: 1, meta: 'disable x btn-info'},
   }
 
   // create a square board
   // adjust the board span (width)
   // update the winning combo
   const initBoard = (len = 3) => {
+    $("#game").empty()
+    winningCombo = []
+
     for(i=1; i<=(len*len); i++){
       $("#game").append(`<li id="slot${i}" class="btn span1">+</li>`)
     }
@@ -54,11 +54,7 @@ $(document).ready(function() {
     }
 
     winningCombo.push(d1, d2)
-
-    console.log(winningCombo)
   }
-
-  initBoard(boardLen) 
 
   const reset = () => {
     $("#game li").text("+");
@@ -67,10 +63,13 @@ $(document).ready(function() {
     $("#game li").removeClass('x')
     $("#game li").removeClass('btn-primary')
     $("#game li").removeClass('btn-info')
+
+    $("#whofirst").prop('disabled', false)
+    $("#gridSize").prop('disabled', false)
   }
 
   const checkPrevMove = (com) => {
-    for(player in score){
+    for(player in players){
       if(winCond(player)) {
         alert(player.toUpperCase() + ' has won the game. Start a new game')
         reset()
@@ -85,14 +84,15 @@ $(document).ready(function() {
     return true
   }
 
+  // tricky bug: if player has the winning move on last slot, it will be a TIE instead
   const checkWinOrTie = () => {
-    for(player in score){
+    for(player in players){
       if (winCond(player))
       {
         alert(player.toUpperCase() + ' wins')
         count = 0
-        score[player]++
-        $(`#${player}_win`).text(score[player])
+        players[player]['score']++
+        $(`#${player}_win`).text(players[player]['score'])
       } else if (count == (boardLen * boardLen)){
         alert('Its a tie. It will restart.')
         reset()
@@ -102,17 +102,13 @@ $(document).ready(function() {
   }
 
   const move = (com) => {
-    if (count%2 == 0) // its always O first move, so its odd count
-    {
-      count++
-      $(com).text(o)
-      $(com).addClass('disable o btn-primary')
-    }
-    else 
-    {
-      count++
-      $(com).text(x)
-      $(com).addClass('disable x btn-info')
+    for(player in players){
+      if(count % 2 == players[player]['turn']){
+        count++
+        $(com).text(player)
+        $(com).addClass(players[player]['meta'])
+        break;
+      }
     }
   }
 
@@ -125,18 +121,41 @@ $(document).ready(function() {
     }, false)
   }
 
+  const clickAction = (evt) => {
+    // slot clicked, disable game options
+    $('#whofirst').prop('disabled', true)
+    $('#gridSize').prop('disabled', true)
+   
+    //state machine
+    //1. check previous move 2. if valid, move 3. check win or tie
+    if(checkPrevMove(evt.target)){ move(evt.target) }
+    checkWinOrTie()
+  }
+
+  initBoard(boardLen) 
+
+  $("#whofirst").change(function(a) {
+    // only 2 players, so can swap like this
+    for(player in players){
+      if(player == a.target.value){
+        players[player]['turn'] = 0
+      } else {
+        players[player]['turn'] = 1
+      }
+    }
+  });
+
+  $("#gridSize").change(function(a) {
+    boardLen = +a.target.value
+    initBoard(boardLen)
+    $("#game li").click(clickAction)
+  });
+
   $("#reset").click(function () {
     $("#game li").text("+");
     reset()
     count = 0
   });
 
-  $('#game li').click(function(){
-    console.log("count ? " + count)
-
-    //state machine
-    //1. check previous move 2. if valid, move 3. check win or tie
-    if(checkPrevMove(this)){ move(this) }
-    checkWinOrTie()
-  });
+  $("#game li").click(clickAction);
 });

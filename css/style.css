@@ -16,4 +16,6 @@
 #tic-tac-toe {width:220px; margin:0 auto}
 .input-append .win_times {background:#fff; width:101px}
 .input-append .win_text {width:52px}
+select{width: 152px; text-align: center}
+option{text-align: center}
 /*******tic-tac-toe END******/
